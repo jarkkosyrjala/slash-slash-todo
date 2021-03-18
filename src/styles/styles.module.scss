@@ -1,0 +1,93 @@
+@import "config";
+.todoApp {
+  max-height: 100vh;
+  display: flex;
+  flex-flow: column;
+}
+.todoHeader {
+  display: flex;
+  flex-flow: row;
+  background-color: $color-header-bg;
+  h1 {
+    font-size: 1.2rem;
+    flex-grow: 1;
+    color: $color-logo-green;
+    span {
+      color: $color-logo-gray;
+    }
+  }
+  nav {
+    padding: 1rem;
+    cursor: pointer;
+  }
+}
+.todoDrawer {
+  position: absolute;
+  display: none;
+  top:3rem;
+  right: 0;
+  max-width: 100vw;
+
+  background-color: white;
+  margin: 0;
+  padding: 1rem 0 0 0;
+  transition: padding-top 0.3s ease-in-out;
+  overflow-y: scroll;
+  li {
+    display: flex;
+    list-style: none;
+    padding: 1rem;
+    border: 1px solid black;
+  }
+}
+
+
+.todoList {
+  background-color: #333;
+  margin: 0;
+  padding: 1rem 0 0 0;
+  transition: padding-top 0.3s ease-in-out;
+  overflow-y: scroll;
+  flex-shrink: 1;
+  &.dragenter {
+    background-color: purple;
+    padding-top: 2rem;
+  }
+  li {
+    display: flex;
+    list-style: none;
+    padding: 1rem;
+    border: 1px solid black;
+    cursor: move;
+    background-color: pink;
+    transition: margin-bottom 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    flex-wrap: wrap;
+    &.dragging {
+      background: purple;
+      opacity: 0.5;
+    }
+    // Drop zone indicatorr
+    &.dragenter::after {
+      color: white;
+      content: '↪';
+      display: block;
+      height: 1rem;
+      width: calc(100% + 2rem);
+      border-top: 1px solid black;
+      background-color: purple;
+      margin: 1rem -1rem -1rem -1rem;
+    }
+    &.done {
+      opacity: 0.3;
+    }
+  }
+}
+
+.todoList li label {
+  flex-grow: 1;
+  pointer-events: none;
+}
+
+.todoInput {
+  padding: 1rem;
+}
