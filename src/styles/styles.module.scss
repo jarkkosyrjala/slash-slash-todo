@@ -114,6 +114,9 @@
 
     form {
       padding: 0 1rem;
+      input {
+        height: 100%;
+      }
     }
 
     label {
@@ -122,6 +125,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      padding-left: 1rem;
     }
 
     .todoInput {
