@@ -34,7 +34,7 @@ class TodoList {
     container.append(this.header.container, this.inputElement, this.ulElement)
 
     // Storage for storing and loading state
-    this.storage = new TodoItemStorage('slash-slash-todo')
+    this.storage = new TodoItemStorage('double-slash-todo')
     this.storage.items.forEach((item) => {
       this.createTodoHtmlElement(item)
     })
@@ -98,7 +98,7 @@ class TodoList {
     const now = new Date()
     a.href = url
     a.target = '_blank'
-    a.download = `slash-slash-todo-${new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    a.download = `double-slash-todo-${new Date(now.getTime() - now.getTimezoneOffset() * 60000)
       .toISOString()
       .slice(0, 10)}.json`
     a.click()
