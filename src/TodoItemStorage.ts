@@ -28,6 +28,17 @@ class TodoItemStorage {
     }
   }
 
+  edit({ id, title }: { id?: string; title: string }) {
+    if (id) {
+      const item = this.items.find((item) => item.created.toString() === id)
+      if (item) {
+        item.title = title
+        item.updated = Date.now()
+        this.save()
+      }
+    }
+  }
+
   move = (from: number, to: number) => {
     this.items.splice(to, 0, this.items.splice(from, 1)[0])
     this.save()

@@ -82,12 +82,19 @@
       color: $list-item-done-color;
       background: $list-item-done-bg;
     }
+    label {
+      flex-grow: 1;
+      //pointer-events: none;
+    }
+    .todoInput {
+      flex-grow: 1;
+      display: none;
+      margin: -1rem 1rem -1rem 0.5rem;
+    }
+    .moveButton {
+      cursor: grab;
+    }
   }
-}
-
-.todoList li label {
-  flex-grow: 1;
-  pointer-events: none;
 }
 
 .todoInput {

@@ -25,7 +25,7 @@ class TodoList {
     this.inputElement.placeholder = 'Type here and press enter to add a todo'
 
     // Input
-    this.inputElement.addEventListener('keypress', (e) => {
+    this.inputElement.addEventListener('keyup', (e) => {
       if (e.code === 'Enter' && this.inputElement.value.length > 0) {
         this.createTodoItem((e.target as HTMLInputElement).value)
         this.inputElement.value = ''
@@ -59,18 +59,25 @@ class TodoList {
       checkbox.type = 'checkbox'
       checkbox.checked = !!done
       checkbox.addEventListener('change', this.toggleDone)
-      li.appendChild(checkbox)
       // Title
       const label = document.createElement('label')
       label.htmlFor = id
       label.innerText = title
-      li.appendChild(label)
+      // Input for editing
+      const input = document.createElement('input')
+      input.className = styles.todoInput
+      input.type = 'text'
+      input.value = label.innerText
+      // Move
+      const moveButton = document.createElement('button')
+      moveButton.className = styles.moveButton
+      moveButton.innerText = '⇅'
       // Delete
       const deleteButton = document.createElement('button')
       deleteButton.innerText = '⌫'
       deleteButton.addEventListener('click', this.deleteTodoItem)
-      li.appendChild(deleteButton)
 
+      li.append(checkbox, label, input, moveButton, deleteButton)
       this.ulElement.appendChild(li)
     }
   }
@@ -108,12 +115,42 @@ class TodoList {
   /** MouseEvent handlers */
 
   startEditing = (e: MouseEvent) => {
+    e.preventDefault()
     const target = e.target as HTMLElement
     const li = target.tagName === 'li' ? target : target.closest('li')
     if (li) {
       const label = li.querySelector('label')
       if (label) {
-        label.style.visibility = 'hidden'
+        label.style.display = 'none'
+        const input: HTMLInputElement | null = li.querySelector(`input.${styles.todoInput}`)
+        if (input) {
+          input.style.display = 'block'
+          input.addEventListener('keyup', this.handleEdit)
+        }
+      }
+    }
+  }
+
+  handleEdit = (e: KeyboardEvent) => {
+    if (e.code === 'Escape' || e.code === 'Enter') {
+      const target = e.currentTarget as HTMLInputElement
+      target.removeEventListener('keyup', this.handleEdit)
+      target.style.removeProperty('display')
+      const li = target.parentElement as HTMLUListElement
+      const label = li.querySelector('label')
+      if (label) {
+        label.style.removeProperty('display')
+        if (e.code === 'Enter') {
+          if (target.value.length > 0) {
+            // Save
+            label.innerText = target.value
+            this.storage.edit({ id: li.dataset.id, title: target.value })
+          } else {
+            // delete when empty
+            li.parentElement?.removeChild(li)
+            this.storage.delete(li.dataset.id)
+          }
+        }
       }
     }
   }
@@ -202,7 +239,9 @@ class TodoList {
           console.warn(`Unknown action from header "${e.detail}"`)
       }
     })
-    this.container.addEventListener('dblclick', this.startEditing, false)
+    //this.container.addEventListener('dblclick', this.startEditing, false)
+
+    document.addEventListener('contextmenu', this.startEditing, false)
 
     this.container.addEventListener('dragstart', this.onDragStart, false)
     this.container.addEventListener('dragend', this.onDragEnd, false)
