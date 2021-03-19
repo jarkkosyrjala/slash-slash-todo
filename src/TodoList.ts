@@ -94,7 +94,37 @@ class TodoList {
     this.storage.add(item)
   }
 
-  import = () => {}
+  import = () => {
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'application/json'
+    fileInput.addEventListener(
+      'change',
+      (e) => {
+        const target = e.currentTarget as HTMLInputElement
+        if (target.files?.length) {
+          const file = target.files[0]
+          const reader = new FileReader()
+          reader.onload = ((f) => (e: ProgressEvent<FileReader>) => {
+            console.log('loaded', e.target?.result)
+            if (e.target?.result) {
+              this.storage.items = [
+                ...this.storage.items,
+                ...(JSON.parse(e.target.result as string) || []),
+              ]
+              this.storage.save()
+              this.storage.items.forEach((item) => {
+                this.createTodoHtmlElement(item)
+              })
+            }
+          })(file)
+          reader.readAsText(file)
+        }
+      },
+      false,
+    )
+    fileInput.click()
+  }
 
   export = () => {
     const blob = new Blob([JSON.stringify(this.storage.items)], {
