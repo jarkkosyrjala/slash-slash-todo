@@ -15,7 +15,7 @@ class Header {
     this.container = document.createElement('header')
     this.container.className = styles.todoHeader
     const heading = document.createElement('h1')
-    heading.innerHTML = '<span>//</span> TODO'
+    heading.innerHTML = '// <span>TODO</span>'
     const nav = document.createElement('nav')
     this.container.append(heading, nav)
     nav.innerText = '☰'

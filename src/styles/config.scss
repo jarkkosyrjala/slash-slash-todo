@@ -1,6 +1,28 @@
-$color-header-bg: #323232!default;
-$color-logo-green: #a8c023;
-$color-logo-gray: #808080;
+// Color palette
+$color-gray-50: #808080!default;
+$color-gray-35: #525252!default;
+$color-gray-20: #323232!default;
+$color-gray-16: #282828!default;
+$color-yellow: #e8bf6a!default;
+$color-purple: #9876aa!default;
+$color-dark-purple: purple!default;
+$color-pink: pink!default;
+$color-green: #bfdb22;
 
-$font-family: Monaco, SFMono-Regular,Menlo,Consolas, "Liberation Mono", "Courier New", monospace;
+// Header color
+$color-header-bg: $color-gray-20!default;
+$header-text-color: $color-gray-50!default;
+$color-logo-text: #bfdb22!default;
+// Drawer colors
+$drawer-background: white!default;
+$drawer-color: black!default;
+// List colors
+$todo-list-bg: $color-gray-20!default;
+$list-item-bg: $color-pink!default;
+$list-item-dragenter-bg: $color-gray-20!default;
+$list-item-drag-zone-indicator-color: $color-yellow!default;
+$list-item-done-bg: $color-gray-35!default;
+$list-item-done-color: $color-yellow!default;
 
+// Fonts
+$font-family: Monaco, SFMono-Regular,Menlo,Consolas, "Liberation Mono", "Courier New", monospace!default;
