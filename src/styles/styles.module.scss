@@ -1,31 +1,37 @@
 @import "config";
+
 .todoApp {
   max-height: 100vh;
   display: flex;
   flex-flow: column;
 }
+
 .todoHeader {
   display: flex;
   flex-flow: row;
   background-color: $color-header-bg;
   color: $header-text-color;
+
   h1 {
     padding-left: 1rem;
     font-size: 1.2rem;
     flex-grow: 1;
+
     span {
       color: $color-logo-text;
     }
   }
+
   nav {
     padding: 1rem;
     cursor: pointer;
   }
 }
+
 .todoDrawer {
   position: absolute;
   display: none;
-  top:3rem;
+  top: 3rem;
   right: 0;
   max-width: 100vw;
   color: $drawer-color;
@@ -34,6 +40,7 @@
   padding: 1rem 0 0 0;
   transition: padding-top 0.3s ease-in-out;
   overflow-y: scroll;
+
   li {
     display: flex;
     list-style: none;
@@ -50,10 +57,18 @@
   transition: padding-top 0.3s ease-in-out;
   overflow-y: scroll;
   flex-shrink: 1;
+  /* Disable pull-to-refresh  */
+  overscroll-behavior-y: contain;
+
   &.dragenter {
     background-color: $list-item-dragenter-bg;
     padding-top: 2rem;
   }
+
+  form {
+    flex-grow: 1;
+  }
+
   li {
     display: flex;
     list-style: none;
@@ -62,12 +77,20 @@
     cursor: move;
     background-color: $list-item-bg;
     transition: margin-bottom 0.3s ease-in-out, background-color 0.3s ease-in-out;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    position: relative;
+    touch-action: manipulation; // Disable double tap zoom
+
     &.dragging {
       background: purple;
       opacity: 0.5;
     }
+
     // Drop zone indicatorr
+    &.dragenter {
+      padding-bottom: 2.5rem;
+    }
+
     &.dragenter::after {
       color: $list-item-drag-zone-indicator-color;
       content: '↪';
@@ -76,21 +99,36 @@
       width: calc(100% + 2rem);
       border-top: 1px solid black;
       background-color: $list-item-dragenter-bg;
-      margin: 1rem -1rem -1rem -1rem;
+      margin: 0 -1rem 0 -1rem;
+
+      position: absolute;
+      bottom: 0;
+      //left: 0;
+      //right: 0;
     }
+
     &.done {
       color: $list-item-done-color;
       background: $list-item-done-bg;
     }
+
+    form {
+      padding: 0 1rem;
+    }
+
     label {
       flex-grow: 1;
       pointer-events: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+
     .todoInput {
-      flex-grow: 1;
       display: none;
-      margin: -1rem 1rem -1rem 0.5rem;
+      margin: -1rem 0 -1rem 0;
     }
+
     .moveButton {
       cursor: grab;
     }
@@ -99,4 +137,5 @@
 
 .todoInput {
   padding: 1rem;
+  width: calc(100% - 2rem);
 }

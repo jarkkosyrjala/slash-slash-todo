@@ -19,19 +19,21 @@ class TodoList {
     this.ulElement = document.createElement('ul')
     this.ulElement.className = styles.todoList
 
+    // Input
+    const form = document.createElement('form')
     this.inputElement = document.createElement('input')
     this.inputElement.className = styles.todoInput
     this.inputElement.type = 'text'
     this.inputElement.placeholder = 'Type here and press enter to add a todo'
+    form.onsubmit = (e) => {
+      e.preventDefault()
+      console.log('onSubmit')
+      this.createTodoItem(this.inputElement.value)
+      this.inputElement.value = ''
+    } // Form element is needed for mobile to work correctly
 
-    // Input
-    this.inputElement.addEventListener('keyup', (e) => {
-      if (e.code === 'Enter' && this.inputElement.value.length > 0) {
-        this.createTodoItem((e.target as HTMLInputElement).value)
-        this.inputElement.value = ''
-      }
-    })
-    container.append(this.header.container, this.inputElement, this.ulElement)
+    form.appendChild(this.inputElement)
+    container.append(this.header.container, form, this.ulElement)
 
     // Storage for storing and loading state
     this.storage = new TodoItemStorage('double-slash-todo')
@@ -64,10 +66,20 @@ class TodoList {
       label.htmlFor = id
       label.innerText = title
       // Input for editing
+      const form = document.createElement('form')
       const input = document.createElement('input')
       input.className = styles.todoInput
       input.type = 'text'
       input.value = label.innerText
+      form.onsubmit = (e) => {
+        e.preventDefault()
+        label.innerText = input.value
+        this.storage.edit({ id: li.dataset.id, title: input.value })
+        // hide edit and show the label
+        label.style.removeProperty('display')
+        input.style.removeProperty('display')
+      }
+      form.appendChild(input)
       // Move
       const moveButton = document.createElement('button')
       moveButton.className = styles.moveButton
@@ -77,7 +89,7 @@ class TodoList {
       deleteButton.innerText = '⌫'
       deleteButton.addEventListener('click', this.deleteTodoItem)
 
-      li.append(checkbox, label, input, moveButton, deleteButton)
+      li.append(checkbox, label, form, moveButton, deleteButton)
       this.ulElement.appendChild(li)
     }
   }
@@ -106,7 +118,6 @@ class TodoList {
           const file = target.files[0]
           const reader = new FileReader()
           reader.onload = ((f) => (e: ProgressEvent<FileReader>) => {
-            console.log('loaded', e.target?.result)
             if (e.target?.result) {
               this.storage.items = [
                 ...this.storage.items,
@@ -213,17 +224,18 @@ class TodoList {
   /** DragEvent handlers */
 
   onDragStart = (e: DragEvent) => {
+    e.dataTransfer?.setData('text', ' ') // Fixes Mobile Chrome drag. For some reason does not work without
     const target = e.target as Element
     if (target) {
       this.draggedElement = target
       target.classList.add(styles.dragging)
     }
   }
-  onDragEnd = (e: DragEvent) => {
-    ;(e.target as HTMLElement).classList.remove(styles.dragging)
-  }
+  onDragEnd = (e: DragEvent) => (e.target as HTMLElement).classList.remove(styles.dragging)
+
   onDragOver = (e: DragEvent) => {
     e.preventDefault()
+    console.log('onDragOver', e)
   }
   onDragLeave = (e: DragEvent) => {
     const target = e.target as Element | null
@@ -269,9 +281,10 @@ class TodoList {
           console.warn(`Unknown action from header "${e.detail}"`)
       }
     })
-    //this.container.addEventListener('dblclick', this.startEditing, false)
 
-    document.addEventListener('contextmenu', this.startEditing, false)
+    this.container.addEventListener('dblclick', this.startEditing, false)
+
+    this.ulElement.addEventListener('contextmenu', this.startEditing, false)
 
     this.container.addEventListener('dragstart', this.onDragStart, false)
     this.container.addEventListener('dragend', this.onDragEnd, false)
