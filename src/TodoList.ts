@@ -82,7 +82,9 @@ class TodoList {
       form.appendChild(input)
       // Delete
       const deleteButton = document.createElement('button')
-      deleteButton.innerText = '⌫'
+      deleteButton.innerText = '✕'
+      deleteButton.className = `${styles.btn} ${styles.delete}`
+
       deleteButton.addEventListener('click', this.deleteTodoItem)
 
       li.append(checkbox, label, form, deleteButton)

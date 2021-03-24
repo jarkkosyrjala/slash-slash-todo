@@ -26,12 +26,14 @@ class Header {
     // Menu items
     const exportElement = document.createElement('li')
     exportElement.innerText = 'Export'
+    exportElement.className = styles.btn
     exportElement.addEventListener('click', () => {
       this.container.dispatchEvent(
         new CustomEvent<ActionEventDetail>('action', { detail: 'export' }),
       )
     })
     const importElement = document.createElement('li')
+    importElement.className = styles.btn
     importElement.addEventListener('click', () => {
       this.container.dispatchEvent(
         new CustomEvent<ActionEventDetail>('action', { detail: 'import' }),
