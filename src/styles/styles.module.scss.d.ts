@@ -4,7 +4,6 @@ interface CssExports {
   'done': string;
   'dragenter': string;
   'dragging': string;
-  'moveButton': string;
   'todoApp': string;
   'todoDrawer': string;
   'todoHeader': string;

@@ -80,16 +80,12 @@ class TodoList {
         input.style.removeProperty('display')
       }
       form.appendChild(input)
-      // Move
-      const moveButton = document.createElement('button')
-      moveButton.className = styles.moveButton
-      moveButton.innerText = '⇅'
       // Delete
       const deleteButton = document.createElement('button')
       deleteButton.innerText = '⌫'
       deleteButton.addEventListener('click', this.deleteTodoItem)
 
-      li.append(checkbox, label, form, moveButton, deleteButton)
+      li.append(checkbox, label, form, deleteButton)
       this.ulElement.appendChild(li)
     }
   }
