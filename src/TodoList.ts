@@ -12,6 +12,11 @@ class TodoList {
   private draggedElement!: Element
   private storage: TodoItemStorage
   private header: Header
+  // PWA
+  private installContainer: HTMLDivElement
+  private installButton: HTMLButtonElement
+  private deferredPrompt: any
+
   constructor(private container: HTMLElement) {
     // Header and menu
     this.header = new Header()
@@ -31,15 +36,23 @@ class TodoList {
       this.createTodoItem(this.inputElement.value)
       this.inputElement.value = ''
     } // Form element is needed for mobile to work correctly
-
     form.appendChild(this.inputElement)
-    container.append(this.header.container, form, this.ulElement)
+    // PWA install button
+    this.installContainer = document.createElement('div')
+    this.installContainer.className = styles.installContainer
+    this.installButton = document.createElement('button')
+    this.installButton.innerText = 'Add to home screen'
+    this.installButton.className = `${styles.btn} ${styles.installButton}`
+    this.installContainer.append(this.installButton)
+
+    container.append(this.header.container, form, this.ulElement, this.installContainer)
 
     // Storage for storing and loading state
     this.storage = new TodoItemStorage('double-slash-todo')
     this.storage.items.forEach((item) => {
       this.createTodoHtmlElement(item)
     })
+
     this.initEventListeners()
   }
 
@@ -290,6 +303,64 @@ class TodoList {
     this.container.addEventListener('dragenter', this.onDragEnter, false)
     this.container.addEventListener('dragleave', this.onDragLeave, false)
     this.container.addEventListener('drop', this.onDrop, false)
+
+    // PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          registration.onupdatefound = () => {
+            const installingWorker = registration.installing
+            if (installingWorker) {
+              installingWorker.onstatechange = () => {
+                switch (installingWorker.state) {
+                  case 'installed':
+                    if (navigator.serviceWorker.controller) {
+                      const p = document.createElement('p')
+                      p.innerText = 'Update Available'
+                      const button = document.createElement('button')
+                      button.className = `${styles.btn}`
+                      button.innerText = 'Update now'
+                      button.style.marginBottom = '10px'
+                      button.onclick = (e) => {
+                        const btn = e.currentTarget as HTMLButtonElement
+                        btn.disabled = true
+                        btn.innerText = 'Updating'
+                        registration.update().then(() => {
+                          window.location.reload()
+                        })
+                      }
+                      this.installContainer.append(p, button)
+                    }
+                    break
+                }
+              }
+            }
+          }
+        })
+        .catch((registrationError) => {
+          console.log('SW registration failed: ', registrationError)
+        })
+
+      window.addEventListener('beforeinstallprompt', (e: any) => {
+        e.preventDefault()
+        this.deferredPrompt = e
+        this.installButton.style.display = 'block'
+        this.installButton.addEventListener('click', (e) => {
+          this.deferredPrompt.prompt()
+          this.installButton.style.removeProperty('display')
+          this.deferredPrompt.userChoice.then((choiceResult: any) => {
+            if (choiceResult.outcome !== 'accepted') {
+              this.installButton.style.display = 'block'
+            }
+          })
+        })
+      })
+
+      window.addEventListener('appinstalled', (evt) => {
+        this.installContainer.style.removeProperty('display')
+      })
+    }
   }
 }
 

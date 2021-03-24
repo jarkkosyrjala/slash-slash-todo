@@ -6,6 +6,8 @@ interface CssExports {
   'done': string;
   'dragenter': string;
   'dragging': string;
+  'installButton': string;
+  'installContainer': string;
   'todoApp': string;
   'todoDrawer': string;
   'todoHeader': string;

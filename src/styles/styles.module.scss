@@ -1,9 +1,9 @@
 @import "config";
 
 .todoApp {
-  max-height: 100vh;
   display: flex;
   flex-flow: column;
+  height: 100%;
 }
 
 .todoHeader {
@@ -155,4 +155,16 @@
 .todoInput {
   padding: 1rem;
   width: calc(100% - 2rem);
+}
+
+.installContainer {
+  display: none;
+  margin-top: auto;
+  padding: 1rem;
+  button {
+    width:100%;
+  }
+}
+.installButton {
+  display: none;
 }
