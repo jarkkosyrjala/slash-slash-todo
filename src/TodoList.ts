@@ -345,13 +345,14 @@ class TodoList {
       window.addEventListener('beforeinstallprompt', (e: any) => {
         e.preventDefault()
         this.deferredPrompt = e
-        this.installButton.style.display = 'block'
+        this.installContainer.style.display = this.installButton.style.display = 'block'
         this.installButton.addEventListener('click', (e) => {
           this.deferredPrompt.prompt()
+          this.installContainer.style.removeProperty('display')
           this.installButton.style.removeProperty('display')
           this.deferredPrompt.userChoice.then((choiceResult: any) => {
             if (choiceResult.outcome !== 'accepted') {
-              this.installButton.style.display = 'block'
+              this.installContainer.style.display = this.installButton.style.display = 'block'
             }
           })
         })
