@@ -13,3 +13,4 @@ See demo at [todo.syrjala.fi](https://todo.syrjala.fi/)
 ## Future improvements
 - Arrange items with keyboard and improve keyboard navigation in general
 - Sync with a cloud platform e.g. Google Drive or DropBox
+- Convert to Progressive Web App
