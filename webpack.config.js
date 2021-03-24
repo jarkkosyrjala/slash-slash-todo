@@ -27,7 +27,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.d.ts', '.js', '.scss', '.module.scss'],
+    extensions: ['.tsx', '.ts', '.js', '.scss', '.module.scss'],
   },
   output: {
     filename: 'todo-app.js',
@@ -37,6 +37,7 @@ module.exports = {
     static: distPath,
     compress: true,
     port: 8888,
+    host: 'localhost',
   },
   plugins: [
     new HtmlWebpackPlugin({
